@@ -206,6 +206,17 @@
   .overview .current{
     color: #f1fd00;
     background-color: rgba(66,185,131,0.7);
+    animation: changeCurrent 0.5s;
+  }
+  @keyframes changeCurrent{
+    0%{
+      color: #333333;
+  		background-color: rgba(66,185,131,0);
+  	}
+    100%{
+      color: #f1fd00;
+    	background-color: rgba(66,185,131,0.7);
+    }
   }
 
   .all-room{

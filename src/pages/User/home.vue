@@ -9,11 +9,11 @@
       <div class="item" :class="current === 0 ? 'current' : ''"
         style="border-right: 1px solid #42B983;" @click="currentChange(0)">
         <span>可预定会议室</span>
-        <span class="num">5</span>
+        <span class="num">{{rooms.length}}</span>
       </div>
       <div class="item" :class="current === 1 ? 'current' : ''"
         style="border-right: 1px solid #42B983;" @click="currentChange(1)">
-        <span>我的预定</span>
+        <span>正在预定</span>
         <span class="num">5</span>
       </div>
       <div class="item" :class="current === 2 ? 'current' : ''" @click="currentChange(2)">
@@ -22,20 +22,114 @@
       </div>
     </div>
 
+    <div v-if="current === 0" class="list" :class="current === 0 ? 'showAnimation':''">
+      <div
+        class="item"
+        v-for="(room,index) in rooms"
+        :key="index"
+      >
+        <span class="detail" @click="Reserve(index)">点击预定</span>
+        <p><span>地点：</span>{{room.place}}</p>
+        <p><span>可容纳人数：</span>{{room.maxPeople}}</p>
+        <p><span>会议室介绍：</span>{{room.introduction}}</p>
+      </div>
+    </div>
+
+    <div v-if="current === 1" class="list" :class="current === 1 ? 'showAnimation':''">
+      <div
+        class="item record"
+        v-for="(item,index) in reserveRecord"
+        :key="index"
+        v-if="item.condition != 2"
+      >
+        <span class="detail" @click="Detail(index)">查看详细</span>
+        <p v-if="item.condition === 0"><span>状态：</span>待确定</p>
+        <p v-if="item.condition === 1"><span>状态：</span>使用中</p>
+        <p v-if="item.condition === 2"><span>状态：</span>已归还</p>
+        <p><span>地点：</span>{{item.roomInfo.place}}</p>
+        <p><span>时间：</span>{{item.reserveInfo.date}} {{item.reserveInfo.time}}</p>
+      </div>
+    </div>
+
+    <div v-if="current === 2" class="list" :class="current === 2 ? 'showAnimation':''">
+      <div
+        class="item record"
+        v-for="(item,index) in reserveRecord"
+        :key="index"
+      >
+        <span class="detail" @click="Detail(index)">查看详细</span>
+        <p v-if="item.condition === 0"><span>状态：</span>待确定</p>
+        <p v-if="item.condition === 1"><span>状态：</span>使用中</p>
+        <p v-if="item.condition === 2"><span>状态：</span>已归还</p>
+        <p><span>地点：</span>{{item.roomInfo.place}}</p>
+        <p><span>时间：</span>{{item.reserveInfo.date}} {{item.reserveInfo.time}}</p>
+      </div>
+    </div>
+
+    <room-reserve v-if="reserve" :roomInfo="roomInfo" :UserInfo="UserInfo"
+      @Close="Close" @Sure="Sure">
+    </room-reserve>
+
+    <record-detail v-if="detail" :recordInfo="recordInfo"
+     @Sure="Sure"  @Close="Close">
+    </record-detail>
   </div>
 </template>
 
 <script>
+  import roomReserve from './roomReserve'
+  import RecordDetail from './Detail'
   export default{
     data(){
       return{
         UserInfo : {},
-        current : 0,
+        current : 2,
+        reserve : false,
+        detail : false,
+
+        index : 0,
+        roomInfo : {},
+        rooms : [//condition 0代表闲置，1预定中，2同意预定
+          {place:'广A404',maxPeople:2,introduction:'碍事法师沙发垫安抚安抚多试试宿舍宿舍是是是是宿舍发发阿斯蒂芬安抚大师傅大师傅啊',condition:0,reserveInfo:''},
+          {place:'广A404',maxPeople:4,introduction:'碍事法师',condition:0,reserveInfo:''},
+        ],
+        recordInfo : {},
+        reserveRecord : [//condition 0代表待确认 1使用中 2已归还
+          {condition:0,roomInfo:{place:'广A404',maxPeople:4,introduction:'碍事法师'},reserveInfo:{name:'余金隆',email:'555@qq.com',date:'2019/11/18',time:'14:10 - 16:20',use:'开会萨法萨法发士大夫撒大师傅add是发多少发撒安抚大奥德赛发多少奥德赛啊啊'}},
+          {condition:0,roomInfo:{place:'广A404',maxPeople:4,introduction:'碍事法师'},reserveInfo:{name:'余金隆',email:'555@qq.com',date:'2019/11/18',time:'14:10 - 16:20',use:'开会萨法萨法发士大夫撒大师傅add是发多少发撒安抚大奥德赛发多少奥德赛啊啊'}},
+          {condition:1,roomInfo:{place:'广A404',maxPeople:4,introduction:'碍事法师'},reserveInfo:{name:'余金隆',email:'555@qq.com',date:'2019/11/18',time:'14:10 - 16:20',use:'开会萨法萨法发士大夫撒大师傅add是发多少发撒安抚大奥德赛发多少奥德赛啊啊'}},
+          {condition:2,roomInfo:{place:'广A404',maxPeople:4,introduction:'碍事法师'},reserveInfo:{name:'余金隆',email:'555@qq.com',date:'2019/11/18',time:'14:10 - 16:20',use:'开会萨法萨法发士大夫撒大师傅add是发多少发撒安抚大奥德赛发多少奥德赛啊啊'}},
+        ]
       }
     },
     methods:{
       currentChange(index){//选择导航栏
         this.current = index
+      },
+      Reserve(index){
+        this.roomInfo = this.rooms[index]
+        this.index = index
+        this.reserve = true
+      },
+      Detail(index){
+        this.recordInfo = this.reserveRecord[index]
+        this.index = index
+        this.detail = true
+      },
+      Sure(e){
+        if(e === 'reserve')//预定会议室
+          this.rooms.splice(this.index,1)
+        else if(e === 'back')//归还会议室
+          this.reserveRecord[this.index].condition = 2
+        else if(e === 'widthdraw')
+          this.reserveRecord.splice(this.index,1)
+        console.log(this.reserveRecord)
+        this.reserve = false
+        this.detail = false
+      },
+      Close(){
+        this.detail = false
+        this.reserve = false
       },
       logout(){//退出登录
         localStorage.clear()
@@ -44,10 +138,9 @@
       }
     },
     beforeRouteEnter(to,from,next) {
-      //直接进入管理界面时先判断登录信息是否过期
       let UserInfo= JSON.parse(localStorage.getItem("UserInfo"))
       next(vm=>{vm.UserInfo = UserInfo})
-     /* if(from.path === '/'){
+     /* if(from.path === '/'){//直接进入需要判断信息
         next(vm=>{
           if(UserInfo){
             const data = new URLSearchParams()
@@ -82,6 +175,10 @@
         })
       } */
     },
+    components:{
+      'room-reserve' : roomReserve,
+      'record-detail' : RecordDetail
+    }
   }
 </script>
 
@@ -136,6 +233,45 @@
     100%{
       color: #f1fd00;
     	background-color: rgba(66,185,131,0.7);
+    }
+  }
+
+  .list{
+    margin: 5px 0;
+  }
+  .list .item{
+    font-size: 17px;
+    background: #42B983;
+    color: #f0f832;
+    width: 95%;
+    min-height: 80px;
+    box-shadow: 2px 2px 2px #7D7E80;
+    margin: 10px auto;
+    padding: 8px;
+    padding-bottom: 1px;
+    border-radius: 15px;
+    line-height: 1.2;
+  }
+  .list .item p span{
+    color: #FFFFFF;
+  }
+  .list .item .detail{
+    color: #FFFFFF;
+    float: right;
+    margin-right: 10px;
+  }
+
+  .showAnimation{
+    animation: show 0.7s ease-out;
+  }
+  @keyframes show{
+    0%{
+  		opacity: 0;
+  		transform: translateX(200px);
+  	}
+    100%{
+    	opacity: 1;
+    	transform: translateX(0);
     }
   }
 </style>

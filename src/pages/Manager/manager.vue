@@ -54,7 +54,7 @@
         <div class="user-info">
           <p>预订人：{{room.reserveInfo.name}}</p>
           <p>邮&emsp;箱：{{room.reserveInfo.email}}</p>
-          <p>时&emsp;间：{{room.reserveInfo.day}}&ensp;{{room.reserveInfo.time}}</p>
+          <p>时&emsp;间：{{room.reserveInfo.date}}&ensp;{{room.reserveInfo.time}}</p>
         </div>
       </div>
     </div>
@@ -74,21 +74,21 @@
         <div class="user-info">
           <p>预订人：{{room.reserveInfo.name}}</p>
           <p>邮&emsp;箱：{{room.reserveInfo.email}}</p>
-          <p>时&emsp;间：{{room.reserveInfo.day}}&ensp;{{room.reserveInfo.time}}</p>
+          <p>时&emsp;间：{{room.reserveInfo.date}}&ensp;{{room.reserveInfo.time}}</p>
         </div>
       </div>
     </div>
 
     <img class="add-room" src="../../assets/AddRoom.png" @click="AddRoom">
 
-    <room-detail v-if="detail" :roomInfo="roomInfo"
+    <manage-room v-if="detail" :roomInfo="roomInfo"
       @Close="detail=false" @Sure="Sure">
-    </room-detail>
+    </manage-room>
   </div>
 </template>
 
 <script>
-  import roomDetail from '../roomDetail'
+  import manageRoom from './manageRoom'
   export default{
     data(){
       return{
@@ -98,11 +98,11 @@
         index : 0,//-1代表添加会议室
         roomInfo : '',
         rooms : [//condition 0代表闲置，1预定中，2同意预定
-          {place:'广A404',maxPeople:1,introduction:'碍事法师',condition:1,reserveInfo:{name:'余金隆',email:'555@qq.com',day:'2019/11/18',time:'14:10-16:20',use:'开会萨法萨法发士大夫撒大师傅add是发多少发撒安抚大奥德赛发多少奥德赛啊啊'}},
+          {place:'广A404',maxPeople:1,introduction:'碍事法师',condition:1,reserveInfo:{name:'余金隆',email:'555@qq.com',date:'2019/11/18',time:'14:10-16:20',use:'开会萨法萨法发士大夫撒大师傅add是发多少发撒安抚大奥德赛发多少奥德赛啊啊'}},
           {place:'广A404',maxPeople:2,introduction:'碍事法师',condition:0,reserveInfo:''},
-          {place:'广A404',maxPeople:3,introduction:'碍事法师是打发大沙发大厦发达撒师范生法大师傅撒打撒发发撒安抚萨法萨法撒发顺丰撒是送达啊方法打发大锅饭大锅饭萨法萨法sad打发打发撒按时啊大概大大安防工大',condition:2,reserveInfo:{name:'余金隆',email:'555@qq.com',day:'2019/11/18',time:'14:10-16:20',use:'开会'}},
+          {place:'广A404',maxPeople:3,introduction:'碍事法师是打发大沙发大厦发达撒师范生法大师傅撒打撒发发撒安抚萨法萨法撒发顺丰撒是送达啊方法打发大锅饭大锅饭萨法萨法sad打发打发撒按时啊大概大大安防工大',condition:2,reserveInfo:{name:'余金隆',email:'555@qq.com',date:'2019/11/18',time:'14:10-16:20',use:'开会'}},
           {place:'广A404',maxPeople:4,introduction:'碍事法师',condition:0,reserveInfo:''},
-          {place:'广A404',maxPeople:5,introduction:'碍事法师',condition:1,reserveInfo:{name:'余金隆',email:'555@qq.com',day:'2019/11/18',time:'14:10-16:20',use:'开会'}},
+          {place:'广A404',maxPeople:5,introduction:'碍事法师',condition:1,reserveInfo:{name:'余金隆',email:'555@qq.com',date:'2019/11/18',time:'14:10-16:20',use:'开会'}},
         ]
       }
     },
@@ -160,7 +160,7 @@
       })
     },
     components:{
-      'room-detail' : roomDetail
+      'manage-room' : manageRoom
     }
   }
 </script>

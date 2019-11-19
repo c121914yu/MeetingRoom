@@ -12,7 +12,9 @@ import { Toast } from 'vant';
 import { Button } from 'vant';
 import { RadioGroup, Radio } from 'vant'
 import { Dialog } from 'vant';
-Vue.use(Toast).use(Button).use(RadioGroup).use(Radio).use(Dialog);
+import { Popup } from 'vant';
+import { DatetimePicker } from 'vant';
+Vue.use(Toast).use(Button).use(RadioGroup).use(Radio).use(Dialog).use(Popup).use(DatetimePicker);
 
 /* eslint-disable no-new */
 new Vue({

@@ -106,6 +106,9 @@
         ]
       }
     },
+    created(){
+      this.GetRoom()
+    },
     methods:{
       currentChange(index){//选择导航栏
         this.current = index
@@ -140,6 +143,15 @@
         else if(e.way === 'Withdraw')
           this.rooms[this.index].condition = e.condition
         this.detail = false
+      },
+      GetRoom(){
+        global.showLoading(this,'获取会议室中')
+        this.$axios.post('/MeetingRoom/manage/GetRoom')
+          .then(res => {
+            global.showToast(this,'获取成功','success')
+            console.log(res.data)
+          })
+          .catch(err => console.log(err))
       },
       logout(){//退出登录
         sessionStorage.removeItem('manager')

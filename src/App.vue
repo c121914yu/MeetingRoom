@@ -10,17 +10,17 @@
     that.$toast({
       message : text,
       icon : icon,
-      loadingType: 'spinner',
       duration : 1500,
       closeOnClick : true,
-      className : 'toast'
+      position : 'middle'
     })
   }
   global.showLoading = (that,text) => {
     that.$toast.loading({
       message: text,
       forbidClick: true,
-      loadingType: 'spinner'
+      loadingType: 'spinner',
+      position : 'middle'
     })
   }
 </script>

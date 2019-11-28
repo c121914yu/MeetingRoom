@@ -102,6 +102,9 @@
         ]
       }
     },
+		created(){
+			this.GetRoom()
+		},
     methods:{
       currentChange(index){//选择导航栏
         this.current = index
@@ -131,6 +134,13 @@
         this.detail = false
         this.reserve = false
       },
+			GetRoom(){
+				this.$axios.post('/MeetingRoom/reserve/GetRoom')
+				  .then(res => {
+				    console.log(res.data)
+				  })
+				  .catch(err => console.log(err))
+			},
       logout(){//退出登录
         localStorage.clear()
         global.Router(this,'login')
@@ -140,7 +150,7 @@
     beforeRouteEnter(to,from,next) {
       let UserInfo= JSON.parse(localStorage.getItem("UserInfo"))
       next(vm=>{vm.UserInfo = UserInfo})
-     /* if(from.path === '/'){//直接进入需要判断信息
+     if(from.path === '/'){//直接进入需要判断信息
         next(vm=>{
           if(UserInfo){
             const data = new URLSearchParams()
@@ -173,7 +183,7 @@
           vm.UserInfo = UserInfo
           global.showToast(vm,'登录成功','success')
         })
-      } */
+      }
     },
     components:{
       'room-reserve' : roomReserve,

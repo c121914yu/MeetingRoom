@@ -1,7 +1,8 @@
+# -*- coding: utf-8 -*-
 from django.http import JsonResponse
 from MeetingRoom.models import user,manager
-import uuid
 import face_recognition
+import uuid
 
 def verifyUser(request):#验证用户登录凭证
     status = 200
@@ -91,7 +92,7 @@ def register(request):#用户注册
         status = 400
         text = '用户已存在'
     else:
-        ID  = uuid.uuid4()
+        ID = uuid.uuid4()
         db = user(
             ID = ID,
             name = data["name"],
@@ -268,8 +269,10 @@ def getKnownFace():
      # 引入已知人脸编码
     known_face = list(manager.objects.all())
     for i in range(len(known_face)):
+        ID = known_face[i].ID
         known_face[i].encode = literal_eval(known_face[i].encode)#转化成list格式
         known_face[i] = model_to_dict(known_face[i])
+        known_face[i]["ID"] = ID
     return known_face
 
 known_face = getKnownFace()

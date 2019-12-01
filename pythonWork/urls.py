@@ -24,7 +24,7 @@ urlpatterns = [
     url(r'^MeetingRoom/manage/DealReserve$', manager.DealReserve),
     url(r'^MeetingRoom/manage/WithdrawRoom$', manager.WithdrawRoom),
 
-    url(r'^MeetingRoom/reserve/GetRoom$', reserve.GetRoom),
+    url(r'^MeetingRoom/reserve/GetInfo$', reserve.GetInfo),
     url(r'^MeetingRoom/reserve/ReserveRoom$', reserve.ReserveRoom),
     url(r'^MeetingRoom/reserve/WithdrawReserve$', reserve.WithdrawReserve),
     url(r'^MeetingRoom/reserve/BackRoom$', reserve.BackRoom),

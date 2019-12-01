@@ -22,6 +22,7 @@ class room(models.Model):
 
 class reserve(models.Model):
     ID = models.CharField(max_length=100,primary_key=True, default='', editable=False)
+    email = models.CharField(max_length=255,default='')
     condition = models.IntegerField(default=0)
     roomInfo = models.TextField(default='')
     reserveInfo = models.TextField(default='')

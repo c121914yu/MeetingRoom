@@ -13,6 +13,7 @@ def GetRoom(request):#不需要传入信息，直接读取所有房间信息并�
         ID = rooms[i].ID
         rooms[i] = model_to_dict(rooms[i])
         rooms[i]['ID'] = ID
+    rooms = sorted(rooms,key=lambda e: e.__getitem__('condition'))
 
     return JsonResponse({
                 "status" : status,

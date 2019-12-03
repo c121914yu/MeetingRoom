@@ -240,7 +240,7 @@ def managerLogin(request):#管理员登录
         text = '识别失败'
     else:#与已经知道的脸部信息对比
         global last_face #与上一张照片比较，如果相似度太高认为是静态照片
-        results = face_recognition.compare_faces(last_face,unknown_face[0],tolerance=0.2)
+        results = face_recognition.compare_faces(last_face,unknown_face[0],tolerance=0.1)
         last_face = unknown_face 
         if results[0]:
             status = 400

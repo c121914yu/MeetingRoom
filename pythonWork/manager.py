@@ -20,7 +20,7 @@ def GetRoom(request):#不需要传入信息，直接读取所有房间信息并�
                 "rooms" : rooms
             })
 
-def AddRoom(request): #添加会议室
+def AddRoom(request): #添加会议室，传入place,maxPeople,introduction
     status = 200
     text = '' 
     data = request.POST
@@ -33,6 +33,7 @@ def AddRoom(request): #添加会议室
         introduction = data['introduction'],
     )
     result = db.save()
+
     if result == None:
         text = '添加成功'
     else:

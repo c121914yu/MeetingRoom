@@ -170,6 +170,7 @@
       let UserInfo= JSON.parse(localStorage.getItem("UserInfo"))
       if(from.path === '/'){//直接进入需要判断信息
         next(vm=>{
+					global.showLoading(vm,'登录中...')
           if(UserInfo){
             const data = new URLSearchParams()
             data.append('email',UserInfo.email)

@@ -20,7 +20,8 @@ def GetInfo(request):#不传入信息，直接读取condition=0的所以会议�
         ID = reserveRecord[i].ID
         reserveRecord[i] = model_to_dict(reserveRecord[i])
         reserveRecord[i]['ID'] = ID
-  
+    reserveRecord = sorted(reserveRecord,key=lambda e: e.__getitem__('condition'))
+    
     return JsonResponse({
                 "status" : status,
                 "rooms" : rooms,

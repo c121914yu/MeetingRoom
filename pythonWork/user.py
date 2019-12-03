@@ -247,7 +247,7 @@ def managerLogin(request):#管理员登录
             text = '同一张照片'
         else:
             for face in known_face:
-                results = face_recognition.compare_faces(face['encode'],unknown_face[0],tolerance=0.3)
+                results = face_recognition.compare_faces(face['encode'],unknown_face[0],tolerance=0.4)
                 if True in results:
                     return JsonResponse({
                             "status" : 200,

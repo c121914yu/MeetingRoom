@@ -9,16 +9,16 @@
       <div class="item" :class="current === 0 ? 'current' : ''"
         style="border-right: 1px solid #42B983;" @click="currentChange(0)">
         <span>会议室总数</span>
-        <span class="num">5</span>
+        <span class="num">{{rooms.length}}</span>
       </div>
       <div class="item" :class="current === 1 ? 'current' : ''"
         style="border-right: 1px solid #42B983;" @click="currentChange(1)">
         <span>已预订</span>
-        <span class="num">5</span>
+        <span class="num">{{reserving().ing}}</span>
       </div>
       <div class="item" :class="current === 2 ? 'current' : ''" @click="currentChange(2)">
         <span>待处理预定</span>
-        <span class="num">5</span>
+        <span class="num">{{reserving().deal}}</span>
       </div>
     </div>
 
@@ -97,13 +97,7 @@
         detail : false,
         index : 0,//-1代表添加会议室
         roomInfo : '',
-        rooms : [//condition 0代表闲置，1预定中，2同意预定
-          {place:'广A404',maxPeople:1,introduction:'碍事法师',condition:1,reserveInfo:{name:'余金隆',email:'555@qq.com',date:'2019/11/18',time:'14:10-16:20',use:'开会萨法萨法发士大夫撒大师傅add是发多少发撒安抚大奥德赛发多少奥德赛啊啊'}},
-          {place:'广A404',maxPeople:2,introduction:'碍事法师',condition:0,reserveInfo:''},
-          {place:'广A404',maxPeople:3,introduction:'碍事法师是打发大沙发大厦发达撒师范生法大师傅撒打撒发发撒安抚萨法萨法撒发顺丰撒是送达啊方法打发大锅饭大锅饭萨法萨法sad打发打发撒按时啊大概大大安防工大',condition:2,reserveInfo:{name:'余金隆',email:'555@qq.com',date:'2019/11/18',time:'14:10-16:20',use:'开会'}},
-          {place:'广A404',maxPeople:4,introduction:'碍事法师',condition:0,reserveInfo:''},
-          {place:'广A404',maxPeople:5,introduction:'碍事法师',condition:1,reserveInfo:{name:'余金隆',email:'555@qq.com',date:'2019/11/18',time:'14:10-16:20',use:'开会'}},
-        ]
+        rooms : []//condition 0代表闲置，1预定中，2同意预定
       }
     },
     created(){
@@ -136,22 +130,36 @@
           this.rooms[this.index] = e.roomInfo
         else if(e.way === 'Remove')
           this.rooms.splice(this.index,1)
-        else if(e.way === 'Agree')
-          this.rooms[this.index].condition = e.condition
-        else if(e.way === 'Refuse')
-          this.rooms[this.index].condition = e.condition
-        else if(e.way === 'Withdraw')
+        else
           this.rooms[this.index].condition = e.condition
         this.detail = false
       },
       GetRoom(){
-        global.showLoading(this,'获取会议室中')
+        global.showLoading(this,'获取信息中')
         this.$axios.post('/MeetingRoom/manage/GetRoom')
           .then(res => {
             global.showToast(this,'获取成功','success')
-            console.log(res.data)
+            let rooms = res.data.rooms
+            rooms.forEach(item => {
+              if(item.condition != 0)
+                item.reserveInfo = JSON.parse(item.reserveInfo)
+            })
+            this.rooms = rooms
           })
           .catch(err => console.log(err))
+      },
+      reserving(){//计算预定中的
+        let reserve = {
+          ing : 0,
+          deal : 0
+        }
+        this.rooms.forEach(item => {
+          if(item.condition ===1)
+            reserve.deal++
+          else if(item.condition === 2)
+            reserve.ing++
+        })
+        return reserve
       },
       logout(){//退出登录
         sessionStorage.removeItem('manager')

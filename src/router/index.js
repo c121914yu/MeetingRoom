@@ -23,5 +23,4 @@ export default new Router({
     {path: '/register',name: 'register',component: Register},
     {path: '/login/manager',name: 'managerLogin',component: ManagerLogin},
   ],
-	mode:'history'
 })

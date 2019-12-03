@@ -14,11 +14,11 @@
       <div class="item" :class="current === 1 ? 'current' : ''"
         style="border-right: 1px solid #42B983;" @click="currentChange(1)">
         <span>正在预定</span>
-        <span class="num">5</span>
+        <span class="num">{{reserving()}}</span>
       </div>
       <div class="item" :class="current === 2 ? 'current' : ''" @click="currentChange(2)">
         <span>预定记录</span>
-        <span class="num">5</span>
+        <span class="num">{{reserveRecord.length}}</span>
       </div>
     </div>
 
@@ -40,10 +40,11 @@
         class="item record"
         v-for="(item,index) in reserveRecord"
         :key="index"
-        v-if="item.condition != 2"
+        v-if="item.condition === 1"
       >
         <span class="detail" @click="Detail(index)">查看详细</span>
-        <p v-if="item.condition === 0"><span>状态：</span>待确定</p>
+        <p v-if="item.condition === -1"><span>状态：</span>拒绝预定</p>
+        <p v-if="item.condition === 0"><span>状态：</span>待管理员确认</p>
         <p v-if="item.condition === 1"><span>状态：</span>使用中</p>
         <p v-if="item.condition === 2"><span>状态：</span>已归还</p>
         <p><span>地点：</span>{{item.roomInfo.place}}</p>
@@ -58,7 +59,8 @@
         :key="index"
       >
         <span class="detail" @click="Detail(index)">查看详细</span>
-        <p v-if="item.condition === 0"><span>状态：</span>待确定</p>
+        <p v-if="item.condition === -1"><span>状态：</span>拒绝预定</p>
+        <p v-if="item.condition === 0"><span>状态：</span>待管理员确认</p>
         <p v-if="item.condition === 1"><span>状态：</span>使用中</p>
         <p v-if="item.condition === 2"><span>状态：</span>已归还</p>
         <p><span>地点：</span>{{item.roomInfo.place}}</p>
@@ -89,22 +91,12 @@
 
         index : 0,
         roomInfo : {},
-        rooms : [//condition 0代表闲置，1预定中，2同意预定
-          {place:'广A404',maxPeople:2,introduction:'碍事法师沙发垫安抚安抚多试试宿舍宿舍是是是是宿舍发发阿斯蒂芬安抚大师傅大师傅啊',condition:0,reserveInfo:''},
-          {place:'广A404',maxPeople:4,introduction:'碍事法师',condition:0,reserveInfo:''},
-        ],
+        rooms : [],//condition 0代表闲置，1预定中，2同意预定
+
         recordInfo : {},
-        reserveRecord : [//condition 0代表待确认 1使用中 2已归还
-          {condition:0,roomInfo:{place:'广A404',maxPeople:4,introduction:'碍事法师'},reserveInfo:{name:'余金隆',email:'555@qq.com',date:'2019/11/18',time:'14:10 - 16:20',use:'开会萨法萨法发士大夫撒大师傅add是发多少发撒安抚大奥德赛发多少奥德赛啊啊'}},
-          {condition:0,roomInfo:{place:'广A404',maxPeople:4,introduction:'碍事法师'},reserveInfo:{name:'余金隆',email:'555@qq.com',date:'2019/11/18',time:'14:10 - 16:20',use:'开会萨法萨法发士大夫撒大师傅add是发多少发撒安抚大奥德赛发多少奥德赛啊啊'}},
-          {condition:1,roomInfo:{place:'广A404',maxPeople:4,introduction:'碍事法师'},reserveInfo:{name:'余金隆',email:'555@qq.com',date:'2019/11/18',time:'14:10 - 16:20',use:'开会萨法萨法发士大夫撒大师傅add是发多少发撒安抚大奥德赛发多少奥德赛啊啊'}},
-          {condition:2,roomInfo:{place:'广A404',maxPeople:4,introduction:'碍事法师'},reserveInfo:{name:'余金隆',email:'555@qq.com',date:'2019/11/18',time:'14:10 - 16:20',use:'开会萨法萨法发士大夫撒大师傅add是发多少发撒安抚大奥德赛发多少奥德赛啊啊'}},
-        ]
+        reserveRecord : []//condition 0代表待确认 1使用中 2已归还,-1拒绝
       }
     },
-		created(){
-			this.GetRoom()
-		},
     methods:{
       currentChange(index){//选择导航栏
         this.current = index
@@ -120,27 +112,54 @@
         this.detail = true
       },
       Sure(e){
-        if(e === 'reserve')//预定会议室
-          this.rooms.splice(this.index,1)
-        else if(e === 'back')//归还会议室
-          this.reserveRecord[this.index].condition = 2
-        else if(e === 'widthdraw')
-          this.reserveRecord.splice(this.index,1)
-        console.log(this.reserveRecord)
-        this.reserve = false
-        this.detail = false
+        let remind = ''
+        let text = ''
+        if(e === 'reserve'){//预定会议室
+          remind = '预订中...'
+          text = '预订成功'
+        }
+        else if(e === 'back'){//归还会议室
+          remind = '归还中...'
+          text = '归还成功'
+        }
+        else if(e === 'widthdraw'){
+          remind = '处理中...'
+          text = '已取消预订'
+        }
+        this.GetInfo(remind,text)
       },
       Close(){
         this.detail = false
         this.reserve = false
       },
-			GetRoom(){
-				this.$axios.post('/MeetingRoom/reserve/GetRoom')
+			GetInfo(remind,text){
+        global.showLoading(this,remind)
+        const data = new URLSearchParams()
+        data.append('email',this.UserInfo.email)
+				this.$axios.post('/MeetingRoom/reserve/GetInfo',data)
 				  .then(res => {
-				    console.log(res.data)
+				    this.rooms = res.data.rooms
+            let reserveRecord = res.data.reserveRecord
+            reserveRecord.forEach(item => {
+              item.roomInfo = JSON.parse(item.roomInfo)
+              item.reserveInfo = JSON.parse(item.reserveInfo)
+            })
+            this.reserveRecord = reserveRecord
+            this.reserving()
+            global.showToast(this,text,'success')
+            this.reserve = false
+            this.detail = false
 				  })
 				  .catch(err => console.log(err))
 			},
+      reserving(){//计算预定中的
+        let ing = 0
+        this.reserveRecord.forEach(item => {
+          if(item.condition === 1)
+            ing++
+        })
+        return ing
+      },
       logout(){//退出登录
         localStorage.clear()
         global.Router(this,'login')
@@ -149,8 +168,7 @@
     },
     beforeRouteEnter(to,from,next) {
       let UserInfo= JSON.parse(localStorage.getItem("UserInfo"))
-      next(vm=>{vm.UserInfo = UserInfo})
-     if(from.path === '/'){//直接进入需要判断信息
+      if(from.path === '/'){//直接进入需要判断信息
         next(vm=>{
           if(UserInfo){
             const data = new URLSearchParams()
@@ -160,7 +178,7 @@
               .then(res => {
                 if(res.data.status === 200){
                   vm.UserInfo = UserInfo
-                  global.showToast(vm,'登录成功','success')
+                  vm.GetInfo('登录中...','登录成功')
                 }
                 else{
                   global.Router(vm,'login')
@@ -181,7 +199,7 @@
       else{//从登录界面进入
         next(vm=>{
           vm.UserInfo = UserInfo
-          global.showToast(vm,'登录成功','success')
+          vm.GetInfo('登录中...','登录成功')
         })
       }
     },

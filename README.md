@@ -18,3 +18,9 @@
 ```
 VUE + Django + MySQL
 ```
+
+# 运行指令
+```
+python manage.py runserver 启动项目
+python migrate
+```

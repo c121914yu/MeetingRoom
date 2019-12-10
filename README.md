@@ -22,5 +22,7 @@ VUE + Django + MySQL
 # 运行指令
 ```
 python manage.py runserver 启动项目
-python migrate
+python manage.py runserver_plus --cert server.crt 0.0.0.0:8088 https模式启动，需要安装模块
+python migrate 创建数据库
+
 ```

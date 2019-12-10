@@ -27,8 +27,7 @@ SECRET_KEY = 'aiy!%io+@rr2*x@g1b+(@be=qyv6^os1w(naub@_ly%tw9%ga7'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
-
+ALLOWED_HOSTS = ['49.232.38.113', 'localhost', '0.0.0.0:3000', '127.0.0.1']
 
 # Application definition
 
@@ -39,7 +38,9 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'MeetingRoom'
+    'MeetingRoom',
+    # 'werkzeug_debugger_runserver',
+    # 'django_extensions',
 ]
 
 MIDDLEWARE = [

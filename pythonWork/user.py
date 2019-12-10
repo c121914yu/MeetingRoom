@@ -147,7 +147,7 @@ def sendEmail(request): #发送邮件
     text = ''
     try:
         smtpObj = smtplib.SMTP() 
-        smtpObj.connect(mail_host, 25)    # 25 为 SMTP 端口号
+        smtpObj.connect(mail_host,25)    # 25 为 SMTP 端口号
         smtpObj.login(mail_user,mail_pass)  
         smtpObj.sendmail(sender, receivers, message.as_string())
         status = 200

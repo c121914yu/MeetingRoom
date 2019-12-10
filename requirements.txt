@@ -2,4 +2,12 @@
 
 PyMySQL==0.9.3
 Django==1.11.17
-# face_recognition=1.2.3
+mysqlclient=1.4.6
+#face_recognition=1.2.3//无法直接pip安装，可使用conda
+
+'''
+    https库
+#django-extensions
+#django-werkzeug-debugger-runserver
+#pyOpenSSL
+'''

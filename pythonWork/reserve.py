@@ -65,7 +65,7 @@ def ReserveRoom(request):
             })
 
 def WithdrawReserve(request):
-    #传入会议室ID，和resereveInfo,修改会议室的condition,并根据reserveInfo里的reserveID删除reserve中对应ID的元素
+    #传入会议室ID，和resereveID,修改会议室的condition=0,并根据reserveID删除reserve中对应ID的元素
     status = 200
     text = '取消预定成功' 
     data = request.POST
@@ -87,7 +87,7 @@ def WithdrawReserve(request):
             })
 
 def BackRoom(request):
-    #传入会议室ID，和resereveInfo,修改会议室的condition,并根据reserveInfo里的reserveID修改reserve中condition
+    #传入会议室ID，和resereveID,并根据reserveID修改reserve中condition=2
     status = 200
     text = '归还会议室成功' 
     data = request.POST

@@ -132,18 +132,17 @@ def sendEmail(request): #发送邮件
     mail_host="smtp.qq.com"  #设置服务器
     mail_user="2979223533@qq.com"    #用户名
     mail_pass="hlrfpzawvuzadcfe"   #口令 
-    
     sender = '2979223533@qq.com'
-    receivers = [email]  # 接收邮件，可设置为你的QQ邮箱或者其他邮箱
 
-    message = MIMEText('你的验证码为：' + rand, 'plain', 'utf-8') #邮件内容
+    message = MIMEText('你的验证码为：' + rand, 'plain') #邮件内容
 
-    message['From'] = Header("会议室预订系统", 'utf-8') #发件人
-    message['To'] =  Header(name, 'utf-8') #收件人
+    message['From'] = Header("2979223533@qq.com") #发件人
+    message['To'] =  Header(email) #收件人
 
-    subject = '会议室预订系统-用户注册' #邮件标题
-    message['Subject'] = Header(subject, 'utf-8')
-      
+    message['Subject'] = Header('会议室预订系统-用户注册')#邮件标题
+
+    receivers = [email]  # 接收邮件，可设置为你的QQ邮箱或者其他邮箱  
+
     status = 200
     text = ''
     try:
@@ -247,7 +246,7 @@ def managerLogin(request):#管理员登录
             text = '同一张照片'
         else:
             for face in known_face:
-                results = face_recognition.compare_faces(face['encode'],unknown_face[0],tolerance=0.3)
+                results = face_recognition.compare_faces(face['encode'],unknown_face[0],tolerance=0.4)
                 if True in results:
                     return JsonResponse({
                             "status" : 200,

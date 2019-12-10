@@ -90,7 +90,7 @@
 					else if(!mailReg.test(this.email))
 						global.showToast(this,'邮箱格式错误','cross')
 					else{
-            global.showLoading(this,'验证码发送中')
+            global.showLoading(this,'发送中')
             const data = new URLSearchParams()
             data.append('name',this.name)
             data.append('email',this.email)
@@ -98,7 +98,7 @@
             	.then(res => {
                 if(res.data.status === 200){
                   this.sure_rand = res.data.text
-                  global.showToast(this,'验证码已发送','success')
+                  global.showToast(this,'已发送','success')
                   /* 重置计时器*/
                   this.second = 5;
                   time = setInterval(()=>{//setInterval可以重复计时,直到clearInterval

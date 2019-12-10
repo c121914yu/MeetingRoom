@@ -40,13 +40,11 @@
         class="item record"
         v-for="(item,index) in reserveRecord"
         :key="index"
-        v-if="item.condition === 1"
+        v-if="item.condition === 0 || item.condition === 1"
       >
         <span class="detail" @click="Detail(index)">查看详细</span>
-        <p v-if="item.condition === -1"><span>状态：</span>拒绝预定</p>
         <p v-if="item.condition === 0"><span>状态：</span>待管理员确认</p>
         <p v-if="item.condition === 1"><span>状态：</span>使用中</p>
-        <p v-if="item.condition === 2"><span>状态：</span>已归还</p>
         <p><span>地点：</span>{{item.roomInfo.place}}</p>
         <p><span>时间：</span>{{item.reserveInfo.date}} {{item.reserveInfo.time}}</p>
       </div>
@@ -59,10 +57,10 @@
         :key="index"
       >
         <span class="detail" @click="Detail(index)">查看详细</span>
-        <p v-if="item.condition === -1"><span>状态：</span>拒绝预定</p>
         <p v-if="item.condition === 0"><span>状态：</span>待管理员确认</p>
         <p v-if="item.condition === 1"><span>状态：</span>使用中</p>
         <p v-if="item.condition === 2"><span>状态：</span>已归还</p>
+        <p v-if="item.condition === 3"><span>状态：</span>拒绝预定</p>
         <p><span>地点：</span>{{item.roomInfo.place}}</p>
         <p><span>时间：</span>{{item.reserveInfo.date}} {{item.reserveInfo.time}}</p>
       </div>
@@ -94,7 +92,7 @@
         rooms : [],//condition 0代表闲置，1预定中，2同意预定
 
         recordInfo : {},
-        reserveRecord : []//condition 0代表待确认 1使用中 2已归还,-1拒绝
+        reserveRecord : []//condition 0代表待确认 1使用中 2已归还,3拒绝
       }
     },
     methods:{
@@ -123,7 +121,7 @@
           text = '归还成功'
         }
         else if(e === 'widthdraw'){
-          remind = '处理中...'
+          remind = '取消中...'
           text = '已取消预订'
         }
         this.GetInfo(remind,text)
@@ -155,7 +153,7 @@
       reserving(){//计算预定中的
         let ing = 0
         this.reserveRecord.forEach(item => {
-          if(item.condition === 1)
+          if(item.condition === 0 || item.condition === 1)
             ing++
         })
         return ing

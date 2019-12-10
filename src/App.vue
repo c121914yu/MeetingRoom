@@ -18,6 +18,7 @@
   global.showLoading = (that,text) => {
     that.$toast.loading({
       message: text,
+			duration:0,
       forbidClick: true,
       loadingType: 'spinner',
       position : 'middle'

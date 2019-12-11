@@ -81,21 +81,12 @@
         @confirm="ChooseDate"
         @cancel="pickering=false"
       />
-      <!-- 开始时间 -->
+      <!-- 选择时间 -->
       <van-datetime-picker
-        v-if="pickerType === 'startTime'"
+        v-if="pickerType === 'startTime' || pickerType === 'endTime'"
         v-model="startTime"
         type="time"
-        title="选择开始时间"
-        @confirm="ChooseTime"
-        @cancel="pickering=false"
-      />
-      <!-- 结束时间 -->
-      <van-datetime-picker
-        v-if="pickerType === 'endTime'"
-        v-model="startTime"
-        type="time"
-        title="选择结束时间"
+        :title="timeTitle"
         @confirm="ChooseTime"
         @cancel="pickering=false"
       />
@@ -111,6 +102,7 @@
         currentDate : new Date(),
         minDate: new Date(),
         startTime : '12:30',
+        timeTitle : '选择开始时间',
 
         pickering : false,
         pickerType : '',
@@ -168,7 +160,7 @@
 						data.append('roomInfo',JSON.stringify(this.roomInfo))
 						data.append('reserveInfo',JSON.stringify(this.reserveInfo))
             data.append('email',this.UserInfo.email)
-
+      
             this.$axios.post('/MeetingRoom/reserve/ReserveRoom',data)
               .then(res => {
                 if(res.data.status === 200){
@@ -218,6 +210,7 @@
   }
 
   .room .room-info .introduction p{
+    min-height: 50px;
     border: 1px solid #42B983;
     border-radius: 5px;
     padding: 5px;

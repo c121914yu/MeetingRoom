@@ -138,6 +138,7 @@
 				  .then(res => {
 				    this.rooms = res.data.rooms
             let reserveRecord = res.data.reserveRecord
+
             reserveRecord.forEach(item => {
               item.roomInfo = JSON.parse(item.roomInfo)
               item.reserveInfo = JSON.parse(item.reserveInfo)

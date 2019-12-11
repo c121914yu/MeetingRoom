@@ -67,10 +67,11 @@ def findpsw(request):#找回密码
     else:
         newpsw = data["password"]
         ID  = uuid.uuid4()
-        dbuser = user.objects.get(email=email)
-        dbuser.password = newpsw
-        dbuser.ID = ID
-        dbuser.save()
+        dbuser = user.objects.filter(email=email)
+        dbuser.update(
+            password=newpsw,
+            ID = ID
+            )
 
         status = 200
         text = '密码修改成功'

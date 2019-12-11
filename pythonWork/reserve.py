@@ -87,13 +87,14 @@ def WithdrawReserve(request):
             })
 
 def BackRoom(request):
-    #传入会议室ID，和resereveInfo,修改会议室的condition,并根据reserveInfo里的reserveID修改reserve中condition
+    #传入roomID，和resereveInfo,修改会议室的condition,并根据reserveInfo里的reserveID修改reserve中condition
     status = 200
     text = '归还会议室成功' 
     data = request.POST
 
     changeRoom = room.objects.get(ID=data['roomID'])
     changeRoom.condition = 0
+    changeRoom.reserveInfo = ''
     reserveRecord = reserve.objects.get(ID=data['reserveID'])
     reserveRecord.condition = 2
 

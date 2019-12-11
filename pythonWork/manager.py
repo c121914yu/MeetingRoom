@@ -91,11 +91,11 @@ def RemoveRoom(request):#传入会议室的ID，返回处理结果
             })
 
 def DealReserve(request):
-    #传入会议室的ID、修改后的condition，reserveInfo，修改数据库中会议室的condition，并根据reserveID寻找对应的reserve，修改对应reserve的contion
+    #传入roomID、修改后的condition，传入reserveID修改对应reserve的contion
     status = 200
     text = '处理预定'
     data=request.POST
-    id=data['ID']
+    id=data['roomID']
     list=room.objects.get(ID=id)
     list.condition=data['condition']
     list.save()
@@ -115,11 +115,11 @@ def DealReserve(request):
                 "text" : text
             })
 def WithdrawRoom(request):
-    #
+    #传入roomID和reserveID，修改room的condition=0,清空reserveInfo.删除reserve
     status = 200
     text = '撤回预定成功' 
     data=request.POST
-    bb=room.objects.get(ID=data['ID'])
+    bb=room.objects.get(ID=data['roomID'])
     bb.condition=0
     bb.reserveInfo=0
     bb.save()

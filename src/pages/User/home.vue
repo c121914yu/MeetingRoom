@@ -110,7 +110,7 @@
         this.detail = true
       },
       Sure(e){
-        let remind = ''
+        let remind = '获取中...'
         let text = ''
         if(e === 'reserve'){//预定会议室
           remind = '预订中...'
@@ -123,6 +123,10 @@
         else if(e === 'widthdraw'){
           remind = '取消中...'
           text = '已取消预订'
+        }
+        else if(e === 'getInfo'){
+          remind = '重新获取会议室'
+          text = '已更新...'
         }
         this.GetInfo(remind,text)
       },
@@ -138,6 +142,7 @@
 				  .then(res => {
 				    this.rooms = res.data.rooms
             let reserveRecord = res.data.reserveRecord
+
             reserveRecord.forEach(item => {
               item.roomInfo = JSON.parse(item.roomInfo)
               item.reserveInfo = JSON.parse(item.reserveInfo)

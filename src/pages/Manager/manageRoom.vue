@@ -347,6 +347,9 @@
     font-weight: 600;
     margin: 5px 0;
   }
+  .room .room-info span{
+    white-space : pre;
+  }
   .room .room-info input{
     flex: 1;
   }

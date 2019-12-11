@@ -118,8 +118,10 @@
                 console.log(res.data)
                 this.$emit('Sure','widthdraw')
               }
-              else
+              else{
+                global.showToast(this,'网络错误','cross')
                 console.log(res.data)
+              }
             })
             .catch(err => global.showToast(this,'网络错误','cross'))
         })

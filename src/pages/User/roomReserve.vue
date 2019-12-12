@@ -160,13 +160,13 @@
 						data.append('roomInfo',JSON.stringify(this.roomInfo))
 						data.append('reserveInfo',JSON.stringify(this.reserveInfo))
             data.append('email',this.UserInfo.email)
-      
+
             this.$axios.post('/MeetingRoom/reserve/ReserveRoom',data)
               .then(res => {
                 if(res.data.status === 200){
                   this.$emit('Sure','reserve')
                 }
-                else{
+                else{//预定失败
                   global.showToast(this,res.data.text,'cross')
                   setTimeout(() => {
                     this.$emit('Sure','getInfo')

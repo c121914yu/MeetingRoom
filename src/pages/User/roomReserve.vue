@@ -160,7 +160,7 @@
 						data.append('roomInfo',JSON.stringify(this.roomInfo))
 						data.append('reserveInfo',JSON.stringify(this.reserveInfo))
             data.append('email',this.UserInfo.email)
-
+      
             this.$axios.post('/MeetingRoom/reserve/ReserveRoom',data)
               .then(res => {
                 if(res.data.status === 200){

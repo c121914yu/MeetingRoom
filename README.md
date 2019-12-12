@@ -3,7 +3,6 @@
 > 会议室预定系统
 
 
-
 # 代码分布
 
 ```
@@ -21,8 +20,8 @@ VUE + Django + MySQL
 
 # 运行指令
 ```
+pip install -r requirements.txt 安装库依赖
 python manage.py runserver 启动项目
 python manage.py runserver_plus --cert server.crt 0.0.0.0:8088 https模式启动，需要安装模块
-python migrate 创建数据库
-
+创建数据库参考：https://www.runoob.com/django/django-model.html
 ```

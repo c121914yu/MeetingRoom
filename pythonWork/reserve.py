@@ -32,8 +32,8 @@ def ReserveRoom(request):
     #传入roomInfo,reserveInfo,生成随机ID，并向reserveInfo添加reserveID属性，之后将两个数据存储，最后将reserveID返回
     status = 200
     text = '' 
-
     data = request.POST
+
     ID = uuid.uuid4()
     reserveInfo = json.loads(data['reserveInfo'])
     reserveInfo['reserveID'] = str(ID)
@@ -42,22 +42,26 @@ def ReserveRoom(request):
     roomInfo = json.loads(data['roomInfo'])
     roomID = roomInfo['ID']
     changeRoom = room.objects.get(ID=roomID)
-    changeRoom.condition = 1
-    changeRoom.reserveInfo = reserveInfo
-    changeRoom.save()
- 
-    db = reserve(
-        ID = ID,
-        roomInfo = data['roomInfo'],
-        email = data['email'],
-        reserveInfo = reserveInfo
-    )
-    result = db.save()
-    if result != None:
-        status = 400
-        text = '预订失败'
+    if(changeRoom.condition == 0):
+        reserveRecord = reserve(
+            ID = ID,
+            roomInfo = data['roomInfo'],
+            email = data['email'],
+            reserveInfo = reserveInfo
+        )
+        result = reserveRecord.save()
+        if result != None:
+            status = 400
+            text = '预订失败'
+        else:
+            changeRoom.condition = 1
+            changeRoom.reserveInfo = reserveInfo
+            changeRoom.save()
+            status = 200
+            text = '预订成功'
     else:
-        text = '预订成功'
+        status = 500
+        text = '会议室已被预定'
 
     return JsonResponse({
                 "status" : status,

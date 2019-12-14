@@ -162,19 +162,25 @@ def sendEmail(request): #发送邮件
             })
 
 import base64
+import os
 face_encode = []
 def managerRegister(request):#管理员注册
     status = 400
     text = ''
-
-    # 将base64格式照片保存
     data = request.POST
+
+    # 判断是否存在name.jpg,不存在则创建该文件
+    filename = data["name"] + ".jpg"
+    if(not os.path.exists(filename)):
+        open(filename,"w")
+    
+    # 将base64格式照片保存
     base = data["base"]
     b64_data = base.split(';base64,')[1]
-    with open('test.jpg','wb') as f:
+    with open(filename,'wb') as f:
         f.write(base64.b64decode(b64_data))
 
-    image = face_recognition.load_image_file("test.jpg")
+    image = face_recognition.load_image_file(filename)
     new_face = face_recognition.face_encodings(image)
 
     if len(new_face) == 0:
@@ -194,6 +200,7 @@ def managerRegister(request):#管理员注册
             face_encode.append(list(new_face[0]))
 
         if len(face_encode) == 3:
+            os.remove(filename)
             ID = uuid.uuid4()
             db = manager(
                 ID = ID,
@@ -219,7 +226,7 @@ def managerRegister(request):#管理员注册
         "text" : text
     })
 
-last_image = face_recognition.load_image_file("test.jpg")
+last_image = face_recognition.load_image_file("login.jpg")
 last_face = face_recognition.face_encodings(last_image)
 def managerLogin(request):#管理员登录
     status = 400
@@ -229,10 +236,10 @@ def managerLogin(request):#管理员登录
     data = request.POST
     base = data["base"]
     b64_data = base.split(';base64,')[1]
-    with open('test.jpg','wb') as f:
+    with open('login.jpg','wb') as f:
         f.write(base64.b64decode(b64_data))
     # 要识别的图片
-    unknown_image = face_recognition.load_image_file("test.jpg")
+    unknown_image = face_recognition.load_image_file("login.jpg")
     unknown_face = face_recognition.face_encodings(unknown_image)
 
     if len(unknown_face) == 0:

@@ -88,14 +88,19 @@
     },
     methods:{
       Sure(){//添加/修改信息
-        if(this.addRoom) //添加新会议室
-          this.AddRoom()
-        else if(this.roomInfo.condition === 0)//修改
-          this.ChangeRoom()
-        else if(this.roomInfo.condition === 1)//处理新预定
-          this.dealReserve()
-        else if(this.roomInfo.condition === 2)//已预订处理
-          this.AlreadyReserve()
+        var re = /^[0-9]+.?[0-9]*$/;
+        if(!re.test(this.roomInfo.maxPeople))
+          global.showToast(this,'人数类型错误','cross')
+        else{
+          if(this.addRoom) //添加新会议室
+            this.AddRoom()
+          else if(this.roomInfo.condition === 0)//修改
+            this.ChangeRoom()
+          else if(this.roomInfo.condition === 1)//处理新预定
+            this.dealReserve()
+          else if(this.roomInfo.condition === 2)//已预订处理
+            this.AlreadyReserve()
+        }
       },
       AddRoom(){//添加
         this.$dialog.confirm({

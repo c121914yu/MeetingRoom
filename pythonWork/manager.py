@@ -90,6 +90,8 @@ def RemoveRoom(request):#传入会议室的ID，返回处理结果
             })
 
 def DealReserve(request):
+    #同意时，reserve的condition=1没有修改
+    #拒绝时.reserve的condition=3没有修改，room里的reserveInfo没有删除
     #传入roomID、修改后的condition，传入reserveID修改对应reserve的contion
     status = 200
     text = '处理预定'
@@ -114,6 +116,7 @@ def DealReserve(request):
                 "text" : text
             })
 def WithdrawRoom(request):
+    #没有删除reserve记录
     #传入roomID和reserveID，修改room的condition=0,清空reserveInfo.删除reserve
     status = 200
     text = '撤回预定成功' 

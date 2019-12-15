@@ -81,9 +81,9 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',  # 或者使用 mysql.connector.django
         'NAME': 'MeetingRoom',
-        'USER': '',
-        'PASSWORD': '',
-        'HOST':'',
+        'USER': 'yjl',
+        'PASSWORD': '121914yu',
+        'HOST':'49.232.38.113',
         'PORT':'3306',
         'OPTIONS': {
             "init_command": "SET sql_mode='STRICT_TRANS_TABLES'",

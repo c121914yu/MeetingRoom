@@ -1,6 +1,3 @@
 pythonWork/settings.py
-pythonWork/__pycache__/manager.cpython-36.pyc
-pythonWork/__pycache__/reserve.cpython-36.pyc
-pythonWork/__pycache__/settings.cpython-36.pyc
-pythonWork/__pycache__/user.cpython-36.pyc
+pythonWork/__pycache__
 login.jpg

@@ -34,8 +34,7 @@ def AddRoom(request): #添加会议室
         maxPeople=data['maxPeople'],
         introduction=data['introduction'],
     )
-    result=db.save() 
-    print(data)
+    result = db.save()
     if result == None:
         text='添加成功'
     else:
@@ -127,3 +126,31 @@ def WithdrawRoom(request):
                 "status" : status,
                 "text" : text
             })
+
+import smtplib
+from email.mime.text import MIMEText
+from email.header import Header
+def sendEmail(email,text): #发送邮件
+    # 第三方 SMTP 服务
+    mail_host="smtp.qq.com"  #设置服务器
+    mail_user="2979223533@qq.com"    #用户名
+    mail_pass="hlrfpzawvuzadcfe"   #口令 
+
+    sender = '2979223533@qq.com'
+    receivers = [email]  # 接收邮件，可设置为你的QQ邮箱或者其他邮箱
+
+    message = MIMEText(text,'plain') #邮件内容
+
+    message['From'] = Header("会议室预订系统") #发件人
+    message['To'] =  Header(email) #收件人
+
+    message['Subject'] = Header('会议室预订系统-预订提醒')#邮件标题
+      
+    try:
+        smtpObj = smtplib.SMTP() 
+        smtpObj.connect(mail_host, 25)    # 25 为 SMTP 端口号
+        smtpObj.login(mail_user,mail_pass)  
+        smtpObj.sendmail(sender, receivers, message.as_string())
+    except smtplib.SMTPException:
+        print('发送邮件失败') 
+    print('发送成功') 

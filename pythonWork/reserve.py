@@ -28,35 +28,38 @@ def GetInfo(request):#不传入信息，直接读取condition=0的所有会议�
 def ReserveRoom(request):
     #传入roomInfo,reserveInfo,生成随机ID，并向reserveInfo添加reserveID属性，之后将两个数据存储，最后将reserveID返回
     status = 200
-    text = ''
-    data=request.POST
+    text = '' 
+    data = request.POST
 
-    reserveID=uuid.uuid4()
-
-    reserveinfo1= json.loads(data['reserveInfo'])
-    reserveinfo1.update({"reserveID":str(reserveID)})
-    reserveinfo1 = json.dumps(reserveinfo1)
+    ID = uuid.uuid4()
+    reserveInfo = json.loads(data['reserveInfo'])
+    reserveInfo['reserveID'] = str(ID)
+    reserveInfo = json.dumps(reserveInfo)
 
     roomInfo = json.loads(data['roomInfo'])
-    ID = roomInfo["ID"]
-
-    #修改不成功，，再想room添加reserveInfo
-    room.objects.filter(ID=ID).update(condition=1)
-
-    db=reserve(
-        ID=reserveID,
-        roomInfo=data['roomInfo'],
-        reserveInfo=reserveinfo1,
-        email=data['email'],
-        condition=0
-    )
-    result=db.save() 
-    
-    if result == None:
-        text='添加成功'
+    roomID = roomInfo['ID']
+    changeRoom = room.objects.get(ID=roomID)
+    if(changeRoom.condition == 0):
+        reserveRecord = reserve(
+            ID = ID,
+            roomInfo = data['roomInfo'],
+            email = data['email'],
+            reserveInfo = reserveInfo
+        )
+        result = reserveRecord.save()
+        if result != None:
+            status = 400
+            text = '预订失败'
+        else:
+            changeRoom.condition = 1
+            changeRoom.reserveInfo = reserveInfo
+            changeRoom.save()
+            status = 200
+            text = '预订成功'
     else:
-        status=400
-        text='请求失败'
+        status = 500
+        text = '会议室已被预定'
+
     return JsonResponse({
                 "status" : status,
                 "text" : text,
@@ -86,17 +89,24 @@ def WithdrawReserve(request):
             })
 
 def BackRoom(request):
-    #传入roomID，和resereveID,修改会议室的condition=0,并根据reserveID修改reserve中condition=2
+    #传入roomID，和resereveInfo,修改会议室的condition,并根据reserveInfo里的reserveID修改reserve中condition
     status = 200
-    data=request.POST
-    reserveinfo=data['reserveID']
-    ID=data['roomID']
-    try:
-        db = reserve.objects.get(ID=ID)
-        text = '处理成功'
-        room.objects.filter(ID=ID).update(condition=0)
-        reserve.objects.filter(reserveInfo=reserveinfo).update(condition=2)
-    except:
+    text = '归还会议室成功' 
+    data = request.POST
+
+    changeRoom = room.objects.get(ID=data['roomID'])
+    changeRoom.condition = 0
+    changeRoom.reserveInfo = ''
+    reserveRecord = reserve.objects.get(ID=data['reserveID'])
+    reserveRecord.condition = 2
+
+    result = changeRoom.save()
+    if result != None:
+        status = 400
+        text = '网络错误'
+
+    result = reserveRecord.save()
+    if result != None:
         status = 400
         text = '处理失败'
     return JsonResponse({

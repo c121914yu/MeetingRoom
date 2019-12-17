@@ -40,7 +40,8 @@ def AddRoom(request): #添加会议室，传入place,maxPeople,introduction
 
     return JsonResponse({
                 "status" : status,
-                "text" : text
+                "text" : text,
+                "ID" : ID
             })
 
 def ChangeRoom(request):#传入会议室的ID、修改后的信息（place,maxPeople,introduction），返回修改结果

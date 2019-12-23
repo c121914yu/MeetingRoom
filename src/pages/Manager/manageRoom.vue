@@ -117,6 +117,7 @@
           this.$axios.post('/MeetingRoom/manage/AddRoom',this.getRequestdata())
             .then(res => {
               if(res.data.status === 200){
+								this.roomInfo.ID = res.data.ID
                 this.$emit('Sure',{
                   roomInfo : this.roomInfo,
                   way : 'Add'

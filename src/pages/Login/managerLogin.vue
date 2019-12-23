@@ -82,12 +82,8 @@
         video.srcObject.getTracks()[0].stop()
       },
       mangerLogin() {//管理员登录
-        if(this.getTimes === 10){
-          this.remarkText = '点击重试'
-          this.stopDiscern()
-          this.getTimes = 0
-          global.showToast(this,'识别失败','cross')
-        }
+        if(this.getTimes === 10)
+          this.failreq('识别失败')
         else{
           let img = this.getPhoto()
           const data = new URLSearchParams()
@@ -96,6 +92,7 @@
             .then(res => {
               console.log(res.data)
               if(res.data.status === 200){
+                this.getTimes = 0
                 const user = JSON.stringify({
                   name : res.data.name,
                   email : res.data.email,
@@ -111,30 +108,49 @@
                 this.mangerLogin()
               }
             })
-            .catch(err => {console.log(err)})
+            .catch(err => {
+              console.log(err)
+              this.failreq('网络错误')
+            })
         }
       },
       managerRegister(){//注册管理员
-        let img = this.getPhoto()
-        const data = new URLSearchParams()
-        data.append('base',img)
-        data.append('name',this.name)
-        data.append('email',this.email)
+        if(this.getTimes === 30)
+          this.failreq('录入失败')
+        else{
+          let img = this.getPhoto()
+          const data = new URLSearchParams()
+          data.append('base',img)
+          data.append('name',this.name)
+          data.append('email',this.email)
 
-        this.$axios.post('/MeetingRoom/user/managerRegister',data)
-          .then(res => {
-            if(res.data.status === 400)
-              this.managerRegister()
-            else{//录入完成
-              this.stopDiscern()
-              global.showToast(this,'录入成功','success')
-              this.remarkText = '点击识别'
-              this.name = ''
-              this.email = ''
-              console.log(res.data)
-            }
-          })
-          .catch(err => console.log(err))
+          this.$axios.post('/MeetingRoom/user/managerRegister',data)
+            .then(res => {
+              if(res.data.status === 400){
+                this.getTimes++
+                this.managerRegister()
+              }
+              else{//录入完成
+                this.getTimes = 0
+                this.stopDiscern()
+                global.showToast(this,'录入成功','success')
+                this.remarkText = '点击识别'
+                this.name = ''
+                this.email = ''
+                console.log(res.data)
+              }
+            })
+            .catch(err => {
+              console.log(err)
+              this.failreq('网络错误')
+            })
+        }
+      },
+      failreq(text){
+        this.remarkText = '点击重试'
+        this.stopDiscern()
+        this.getTimes = 0
+        global.showToast(this,text,'cross')
       },
       getPhoto(){//获取屏幕截图照片
         let video = document.getElementById('video')

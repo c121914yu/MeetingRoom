@@ -124,25 +124,24 @@ def sendEmail(request): #发送邮件
     # 用户信息
     data = request.POST
     email = data["email"]
-    name = data["name"]
     rand = ''
     for i in range(6):
         rand += str(random.randint(1,9))
 
     # 第三方 SMTP 服务
     mail_host="smtp.qq.com"  #设置服务器
-    mail_user="2979223533@qq.com"    #用户名
-    mail_pass="hlrfpzawvuzadcfe"   #口令 
-    sender = '2979223533@qq.com'
+    mail_user="545436317@qq.com"    #用户名
+    mail_pass="bcmvluovmjrabbag"   #口令 
+    sender = '545436317@qq.com'
 
-    message = MIMEText('你的验证码为：' + rand, 'plain') #邮件内容
+    message = MIMEText('你的验证码为：' + rand, 'plain', 'utf-8') #邮件内容
 
-    message['From'] = Header("2979223533@qq.com") #发件人
-    message['To'] =  Header(email) #收件人
+    message['From'] = "会议室预订系统"  #发件人
+    message['To'] =  email                 #收件人
 
-    message['Subject'] = Header('会议室预订系统-用户注册')#邮件标题
+    message['Subject'] = '会议室预订系统-用户注册'#邮件标题
 
-    receivers = [email]  # 接收邮件，可设置为你的QQ邮箱或者其他邮箱  
+    receivers = email  # 接收邮件，可设置为你的QQ邮箱或者其他邮箱  
 
     status = 200
     text = ''
@@ -151,6 +150,7 @@ def sendEmail(request): #发送邮件
         smtpObj.connect(mail_host,25)    # 25 为 SMTP 端口号
         smtpObj.login(mail_user,mail_pass)  
         smtpObj.sendmail(sender, receivers, message.as_string())
+        smtpObj.quit()
         status = 200
         text = rand
     except smtplib.SMTPException:

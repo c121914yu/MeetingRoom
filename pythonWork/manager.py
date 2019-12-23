@@ -145,11 +145,11 @@ from email.header import Header
 def sendEmail(email,text): #发送邮件
     # 第三方 SMTP 服务
     mail_host="smtp.qq.com"  #设置服务器
-    mail_user="2979223533@qq.com"    #用户名
-    mail_pass="hlrfpzawvuzadcfe"   #口令 
-
-    sender = '2979223533@qq.com'
-    receivers = [email]  # 接收邮件，可设置为你的QQ邮箱或者其他邮箱
+    mail_user="545436317@qq.com"    #用户名
+    mail_pass="bcmvluovmjrabbag"   #口令 
+    sender = '545436317@qq.com'
+    
+    receivers = email  # 接收邮件，可设置为你的QQ邮箱或者其他邮箱
 
     message = MIMEText(text,'plain') #邮件内容
 

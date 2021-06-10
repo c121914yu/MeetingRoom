@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 PyMySQL==0.9.3
-Django==1.11.17
+Django==2.2.24
 mysqlclient==1.4.6
 #face_recognition=1.2.3//windows无法直接pip安装，可使用conda
 
